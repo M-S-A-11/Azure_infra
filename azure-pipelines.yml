@@ -3,6 +3,7 @@ trigger:
 
 pool:
   vmImage: 'ubuntu-latest'
+  name: 'GitHub-hosted Agents' 
 
 variables:
   workingDir: 'environment/20260706/dev'
