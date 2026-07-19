@@ -1,0 +1,30 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  workingDir: environment/20260706/dev
+  terraformVersion: 1.9.8
+
+steps:
+- checkout: self
+
+- task: AzureCLI@2
+  displayName: Terraform basic flow
+  inputs:
+    azureSubscription: YOUR_AZURE_SERVICE_CONNECTION
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      set -e
+      curl -fsSL https://releases.hashicorp.com/terraform/$(terraformVersion)/terraform_$(terraformVersion)_linux_amd64.zip -o terraform.zip
+      sudo unzip -o terraform.zip -d /usr/local/bin
+
+      cd "$(workingDir)"
+      terraform init
+      terraform validate
+      terraform fmt -check
+      terraform plan -out=tfplan
+      terraform apply -auto-approve tfplan
