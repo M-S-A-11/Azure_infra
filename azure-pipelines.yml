@@ -2,36 +2,10 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'   # Microsoft-hosted agent
-
-variables:
-  workingDir: 'environment/20260706/dev'
+  vmImage: 'ubuntu-latest'
 
 steps:
 - checkout: self
 
-# Install Terraform manually (since TerraformInstaller extension isn’t installed)
-- script: |
-    sudo apt-get update
-    sudo apt-get install -y wget unzip
-    wget https://releases.hashicorp.com/terraform/1.5.7/terraform_1.5.7_linux_amd64.zip
-    unzip terraform_1.5.7_linux_amd64.zip
-    sudo mv terraform /usr/local/bin/
-    terraform -version
-  displayName: 'Install Terraform manually'
-
-# Run Terraform commands using Azure CLI task
-- task: AzureCLI@2
-  displayName: 'Terraform basic flow'
-  inputs:
-    azureSubscription: 'ADO_Practice'   # <-- must match the Service Connection name created by Owner/Admin
-    scriptType: 'bash'
-    scriptLocation: 'inlineScript'
-    inlineScript: |
-      set -e
-      cd "$(workingDir)"
-      terraform init
-      terraform validate
-      terraform fmt -check
-      terraform plan -out=tfplan
-      terraform apply -auto-approve tfplan
+- script: echo "Hello from Azure DevOps agent"
+  displayName: 'Sanity check'
